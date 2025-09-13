@@ -1,20 +1,24 @@
 class Option
 {
-    float P; // value of the option
+    float C; // price of the call
+    float S; // price of the underlying asset
     float K; // strike price
     float T; // time to expiry
-    float S; // price of the underlying asset
     float r; // risk-free interest rate
-    float estimated_price;
 
 public:
-    Option(float P, float S, float K, float T, float r);
+    Option(float C, float S, float K, float T, float r);
 
     float estimate_price(float sigma);
+    float calculate_iv();
+
+    static float cdf(float x);
+    static float erf(float x);
 
 private:
-    float cdf(float x);
-    float erf(float x);
-};
+    float iv_guess();
+    float newton_raphson(float (Option::*)(float x), float prev_guess, float tolerance);
 
-float cdf(float x);
+    static float power_expansion(float x, int depth);
+    static int factorial(int x);
+};
