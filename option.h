@@ -1,3 +1,6 @@
+#pragma once
+#include <functional>
+
 class Option
 {
     float C; // price of the call
@@ -12,13 +15,7 @@ public:
     float estimate_price(float sigma);
     float calculate_iv();
 
-    static float cdf(float x);
-    static float erf(float x);
-
 private:
     float iv_guess();
-    float newton_raphson(float (Option::*)(float x), float prev_guess, float tolerance);
-
-    static float power_expansion(float x, int depth);
-    static int factorial(int x);
+    float newton_raphson(std::function<float(float)> func, float prev_guess, float tolerance);
 };

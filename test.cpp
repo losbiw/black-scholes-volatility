@@ -1,23 +1,23 @@
-#include <iostream>
+#include "option.h"
 #include <cassert>
 #include <format>
-#include "option.hpp"
+#include <iostream>
 
 int main()
 {
-  float C = 21.06;
+  float C = 3.99;
   float S = 100;
-  float K = 80;
+  float K = 105;
   float T = 0.5;
   float r = 0.02;
+  float predetermined = 0.2;
 
   Option *option = new Option(C, S, K, T, r);
 
-  float hard_coded_sigma = 0.2;
-  float price = option->estimate_price(hard_coded_sigma);
+  float sigma = option->calculate_iv();
 
-  std::cout << "Supposed to be: " << C << std::endl;
-  std::cout << "Instead got: " << price << std::endl;
+  std::cout << "Supposed to be: " << predetermined << std::endl;
+  std::cout << "Instead got: " << sigma << std::endl;
 
-  assert(C == price && "Prices do not match");
+  assert(predetermined == sigma && "Prices do not match");
 }

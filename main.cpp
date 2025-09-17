@@ -1,5 +1,5 @@
+#include "option.h"
 #include <iostream>
-#include "option.hpp"
 
 void assign_user_vars(float &C, float &S, float &K, float &T, float &r)
 {
@@ -25,9 +25,6 @@ int main()
     assign_user_vars(C, S, K, T, r);
 
     Option *option = new Option(C, S, K, T, r);
-
-    // float hard_coded_sigma = 0.2;
-    // float price = option->estimate_price(hard_coded_sigma);
     float sigma = option->calculate_iv();
 
     std::cout << sigma << std::endl;
