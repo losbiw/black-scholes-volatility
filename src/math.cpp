@@ -1,5 +1,8 @@
 #include "math.h"
 #include <cmath>
+#include <functional>
+
+#define DERIVATIVE_STEP_SIZE 0.00001
 
 // cumulative density of the standard normal distribution
 float Math::cdf(float x)
@@ -24,6 +27,20 @@ float Math::power_expansion(float x, int depth)
   }
 
   return sum;
+}
+
+float Math::newton_raphson(std::function<float(float)> f, float x0, float tolerance)
+{
+  float fx0 = f(x0);
+  float dx = (f(x0 + DERIVATIVE_STEP_SIZE) - fx0) / DERIVATIVE_STEP_SIZE;
+  float x1 = x0 - (fx0 / dx);
+
+  if (abs(x1 - x0) > tolerance)
+  {
+    return newton_raphson(f, x1, tolerance);
+  }
+
+  return x1;
 }
 
 // error function

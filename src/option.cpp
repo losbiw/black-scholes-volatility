@@ -1,11 +1,9 @@
 #include "math.h"
 #include "option.h"
 #include <cmath>
-#include <functional>
 #include <iostream>
 
 #define TOLERANCE_LEVEL pow(10, -8)
-#define DERIVATIVE_STEP_SIZE 0.0001
 
 Option::Option(float C, float S, float K, float T, float r) : C(C), S(S), K(K), T(T), r(r)
 {
@@ -23,27 +21,19 @@ float Option::iv_guess()
 float Option::calculate_iv()
 {
     float initial_guess = iv_guess();
-    return newton_raphson(std::bind(&Option::estimate_price, this, std::placeholders::_1), initial_guess, TOLERANCE_LEVEL);
+    return Math::newton_raphson(std::bind(&Option::price_volatility, this, std::placeholders::_1), initial_guess, TOLERANCE_LEVEL);
 }
 
-float Option::newton_raphson(std::function<float(float)> func, float prev_guess, float tolerance)
+float Option::price_volatility(float sigma)
 {
-    float f_at_x0 = func(prev_guess);
-    float derivative = (func(prev_guess + DERIVATIVE_STEP_SIZE) - func(prev_guess)) / DERIVATIVE_STEP_SIZE;
-    float improved_guess = prev_guess - (f_at_x0 / derivative);
-
-    if (abs(improved_guess - prev_guess) > tolerance)
-    {
-        return newton_raphson(func, improved_guess, tolerance);
-    }
-
-    return improved_guess;
+    return Option::estimate_price(sigma) - C;
 }
 
 float Option::estimate_price(float sigma)
 {
-    float d1 = (log(S / K) + (r + pow(sigma, 2) / 2) * T) / (sigma * sqrt(T));
-    float d2 = d1 - sigma * sqrt(T);
+    float sqrtT = sqrt(T);
+    float d1 = (log(S / K) + (r + pow(sigma, 2) / 2) * T) / (sigma * sqrtT);
+    float d2 = d1 - sigma * sqrtT;
 
     float phi1 = Math::cdf(d1);
     float phi2 = Math::cdf(d2);

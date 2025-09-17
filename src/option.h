@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 
 class Option
 {
@@ -13,9 +12,9 @@ public:
     Option(float C, float S, float K, float T, float r);
 
     float estimate_price(float sigma);
+    float price_volatility(float sigma);
     float calculate_iv();
 
 private:
     float iv_guess();
-    float newton_raphson(std::function<float(float)> func, float prev_guess, float tolerance);
 };
