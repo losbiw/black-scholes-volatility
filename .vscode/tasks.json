@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "g++ build debuggable executable",
+      "command": "make",
+      "args": [
+        "debug",
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+  ],
+  "version": "2.0.0"
+}
