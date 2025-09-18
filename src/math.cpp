@@ -33,6 +33,13 @@ float Math::newton_raphson(std::function<float(float)> f, float x0, float tolera
 {
   float fx0 = f(x0);
   float dx = (f(x0 + DERIVATIVE_STEP_SIZE) - fx0) / DERIVATIVE_STEP_SIZE;
+
+  // function doesn't converge if x is a local maximum/mimimum
+  if (dx == 0.0)
+  {
+    return NULL;
+  }
+
   float x1 = x0 - (fx0 / dx);
 
   if (abs(x1 - x0) > tolerance)
@@ -42,6 +49,8 @@ float Math::newton_raphson(std::function<float(float)> f, float x0, float tolera
 
   return x1;
 }
+
+float Math::brent() {}
 
 // error function
 float Math::erf(float x)

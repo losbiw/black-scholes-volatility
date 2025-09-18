@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-#define TOLERANCE_LEVEL pow(10, -8)
+#define TOLERANCE_LEVEL pow(10, -6)
 
 Option::Option(float C, float S, float K, float T, float r) : C(C), S(S), K(K), T(T), r(r)
 {
@@ -12,7 +12,7 @@ Option::Option(float C, float S, float K, float T, float r) : C(C), S(S), K(K), 
 // estimates initial guess for implied volatility using Brenner's and Subrahmanyam's method
 float Option::iv_guess()
 {
-    const float atm_value = 0.398;
+    const float atm_value = 0.398f;
     float isd = (C / S) / (atm_value * sqrt(T));
 
     return isd;
@@ -21,7 +21,14 @@ float Option::iv_guess()
 float Option::calculate_iv()
 {
     float initial_guess = iv_guess();
-    return Math::newton_raphson(std::bind(&Option::price_volatility, this, std::placeholders::_1), initial_guess, TOLERANCE_LEVEL);
+    float newton_result = Math::newton_raphson(std::bind(&Option::price_volatility, this, std::placeholders::_1), initial_guess, TOLERANCE_LEVEL);
+
+    if (newton_result != NULL)
+    {
+        return newton_result;
+    }
+
+    // use brent's as a fallback in case newton doesn't converge
 }
 
 float Option::price_volatility(float sigma)
